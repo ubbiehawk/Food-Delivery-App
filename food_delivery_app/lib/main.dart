@@ -52,20 +52,72 @@ class _Homepage extends State<MyHomePage> {
                 padding: const EdgeInsets.all(10),
                 child: Column(
                   children: [
-                    Card(
-                      child: ListTile(
-                        leading: Image(
-                            image:
-                                AssetImage('assets/tacomac/tacomaclogo.png')),
-                        title: TextButton(
-                            child: const Text('Taco Mac'),
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          menu(restaurant: 'taco mac')));
-                            }),
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const menu(
+                                    restaurant: 'tacomac', title: 'Taco Mac')));
+                      },
+                      child: const Card(
+                        child: ListTile(
+                          leading: Image(
+                              image:
+                                  AssetImage('assets/tacomac/tacomaclogo.png')),
+                          title: Text('Taco Mac',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              )),
+                          subtitle: Text('Sports bar & grill'),
+                        ),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const menu(
+                                    restaurant: 'hattiebs',
+                                    title: 'Hattie B\'s')));
+                      },
+                      child: const Card(
+                        child: ListTile(
+                          leading: Image(
+                              image: AssetImage(
+                                  'assets/hattiebs/hattiebslogo.png')),
+                          title: Text('Hattie B\'s',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              )),
+                          subtitle: Text('Nashville hot chicken'),
+                        ),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const menu(
+                                    restaurant: 'hungryaf',
+                                    title: 'Hungry AF')));
+                      },
+                      child: const Card(
+                        child: ListTile(
+                          leading: Image(
+                              image: AssetImage(
+                                  'assets/hungryaf/hungryaflogo.png')),
+                          title: Text('Hungry AF',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              )),
+                          subtitle: Text('American cuisine'),
+                        ),
                       ),
                     ),
                   ],
