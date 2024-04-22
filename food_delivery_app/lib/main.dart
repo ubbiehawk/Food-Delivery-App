@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-//import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'firebase_options.dart';
+import 'menu.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -47,6 +47,28 @@ class _Homepage extends State<MyHomePage> {
           backgroundColor: Colors.deepPurple,
           title: Text(widget.title),
         ),
-        body: Center(child: Column()));
+        body: SingleChildScrollView(
+            child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: Column(
+                  children: [
+                    Card(
+                      child: ListTile(
+                        leading: Image(
+                            image:
+                                AssetImage('assets/tacomac/tacomaclogo.png')),
+                        title: TextButton(
+                            child: const Text('Taco Mac'),
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          menu(restaurant: 'taco mac')));
+                            }),
+                      ),
+                    ),
+                  ],
+                ))));
   }
 }
