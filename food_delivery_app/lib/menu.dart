@@ -22,6 +22,58 @@ class menu extends StatefulWidget {
   State<menu> createState() => _menuState(restaurant, title);
 }
 
+class MenuItemList extends StatelessWidget {
+  final Stream<QuerySnapshot> menuStream;
+
+  MenuItemList({required this.menuStream, super.key});
+
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder(
+      stream: menuStream,
+      builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
+        if (streamSnapshot.hasData) {
+          return ListView.builder(
+            itemCount: streamSnapshot.data!.docs.length,
+            itemBuilder: (context, index) {
+              final DocumentSnapshot documentSnapshot =
+                  streamSnapshot.data!.docs[index];
+              return Card(
+                margin: const EdgeInsets.all(10),
+                child: ListTile(
+                  title: Text(
+                    documentSnapshot['name'] +
+                        '  --  \$${documentSnapshot['price']}',
+                    style: const TextStyle(fontSize: 14),
+                  ),
+                  trailing: IconButton(
+                    icon: const Icon(Icons.add),
+                    onPressed: () {
+                      _firestore.collection('order').add({
+                        'name': documentSnapshot['name'],
+                        'price': documentSnapshot['price'],
+                      });
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Item Added To Cart'),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              );
+            },
+          );
+        }
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+    );
+  }
+}
+
 class _menuState extends State<menu> {
   String restaurant;
   String title;
@@ -46,21 +98,22 @@ class _menuState extends State<menu> {
       .doc('sides')
       .collection('items');
 
-final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   List<String> order = [];
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          backgroundColor: Colors.deepPurple,
           title: Text('$title menu'),
           actions: <Widget>[
-            IconButton(onPressed: (){
- Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => CartScreen()));
-            }, 
-            icon: Icon(Icons.shopping_cart_outlined))
+            IconButton(
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => CartScreen()));
+                },
+                icon: const Icon(Icons.shopping_cart_outlined),
+                color: Colors.grey)
           ],
         ),
         body: Column(
@@ -73,41 +126,7 @@ final FirebaseFirestore _firestore = FirebaseFirestore.instance;
             ),
             const Text('Appetizers', style: TextStyle(fontSize: 30)),
             Expanded(
-              child: StreamBuilder(
-                  stream: _menuAppetizers.snapshots(),
-                  builder:
-                      (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
-                    if (streamSnapshot.hasData) {
-                      return ListView.builder(
-                        itemCount: streamSnapshot.data!.docs.length,
-                        itemBuilder: (context, index) {
-                          final DocumentSnapshot documentSnapshot =
-                              streamSnapshot.data!.docs[index];
-                          return Card(
-                              margin: const EdgeInsets.all(10),
-                              child: ListTile(
-                                title: Text(
-                                    documentSnapshot['name'] +
-                                        '  --  \$${documentSnapshot['price']}',
-                                    style: const TextStyle(fontSize: 14)),
-                                trailing: IconButton(
-                                  icon: const Icon(Icons.add),
-                                  onPressed: () {
-                              _firestore.collection('order')..add({
-                                'name': documentSnapshot['name'],
-                                'price': documentSnapshot['price'],
-                              });
-                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Item Added To Cart')));
-                                },
-                                ),
-                              ));
-                        },
-                      );
-                    }
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }),
+              child: MenuItemList(menuStream: _menuAppetizers.snapshots()),
             ),
             const Divider(
               height: 30,
@@ -116,86 +135,16 @@ final FirebaseFirestore _firestore = FirebaseFirestore.instance;
             ),
             const Text('Main Course', style: TextStyle(fontSize: 30)),
             Expanded(
-              child: StreamBuilder(
-                  stream: _menuMain.snapshots(),
-                  builder:
-                      (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
-                    if (streamSnapshot.hasData) {
-                      return ListView.builder(
-                        itemCount: streamSnapshot.data!.docs.length,
-                        itemBuilder: (context, index) {
-                          final DocumentSnapshot documentSnapshot =
-                              streamSnapshot.data!.docs[index];
-                          return Card(
-                            margin: const EdgeInsets.all(10),
-                            child: ListTile(
-                              title: Text(
-                                  documentSnapshot['name'] +
-                                      '  --  \$${documentSnapshot['price']}',
-                                  style: const TextStyle(fontSize: 14)),
-                              trailing: IconButton(
-                                icon: const Icon(Icons.add),
-                                //Adds an Item to Order Cart ###UNFINISHED
-                                onPressed: () {
-                              _firestore.collection('order')..add({
-                                'name': documentSnapshot['name'],
-                                'price': documentSnapshot['price'],
-                              });
-                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Item Added To Cart')));
-                                },
-                              ),
-                            ),
-                          );
-                        },
-                      );
-                    }
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }),
+              child: MenuItemList(menuStream: _menuMain.snapshots()),
             ),
-             const Divider(
+            const Divider(
               height: 30,
               thickness: 5,
               color: Colors.black,
             ),
             const Text('Entrees', style: TextStyle(fontSize: 30)),
             Expanded(
-              child: StreamBuilder(
-                  stream: _menuEntrees.snapshots(),
-                  builder:
-                      (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
-                    if (streamSnapshot.hasData) {
-                      return ListView.builder(
-                        itemCount: streamSnapshot.data!.docs.length,
-                        itemBuilder: (context, index) {
-                          final DocumentSnapshot documentSnapshot =
-                              streamSnapshot.data!.docs[index];
-                          return Card(
-                              margin: const EdgeInsets.all(10),
-                              child: ListTile(
-                                title: Text(
-                                    documentSnapshot['name'] +
-                                        '  --  \$${documentSnapshot['price']}',
-                                    style: const TextStyle(fontSize: 14)),
-                                trailing: IconButton(
-                                  icon: const Icon(Icons.add),
-                                  onPressed: (){
-                              _firestore.collection('order')..add({
-                                'name': documentSnapshot['name'],
-                                'price': documentSnapshot['price'],
-                              });
-                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Item Added To Cart')));
-                                },
-                                ),
-                              ));
-                        },
-                      );
-                    }
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }),
+              child: MenuItemList(menuStream: _menuEntrees.snapshots()),
             ),
           ],
         ));
