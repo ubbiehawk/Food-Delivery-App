@@ -92,7 +92,13 @@ final FirebaseFirestore _firestore = FirebaseFirestore.instance;
                                     style: const TextStyle(fontSize: 14)),
                                 trailing: IconButton(
                                   icon: const Icon(Icons.add),
-                                  onPressed: () {},
+                                  onPressed: () {
+                              _firestore.collection('order')..add({
+                                'name': documentSnapshot['name'],
+                                'price': documentSnapshot['price'],
+                              });
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Item Added To Cart')));
+                                },
                                 ),
                               ));
                         },
@@ -174,7 +180,13 @@ final FirebaseFirestore _firestore = FirebaseFirestore.instance;
                                     style: const TextStyle(fontSize: 14)),
                                 trailing: IconButton(
                                   icon: const Icon(Icons.add),
-                                  onPressed: () {},
+                                  onPressed: (){
+                              _firestore.collection('order')..add({
+                                'name': documentSnapshot['name'],
+                                'price': documentSnapshot['price'],
+                              });
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Item Added To Cart')));
+                                },
                                 ),
                               ));
                         },

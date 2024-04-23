@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/widgets.dart';
 import 'firebase_options.dart';
+import 'package:food_delivery_app/main.dart';
 
 
 late final CollectionReference _orders = FirebaseFirestore.instance.collection('order');
@@ -41,10 +42,7 @@ Widget build(BuildContext context) {
                                     documentSnapshot['name'] +
                                         '  --  \$${documentSnapshot['price']}',
                                     style: const TextStyle(fontSize: 14)),
-                                trailing: IconButton(
-                                  icon: const Icon(Icons.add),
-                                  onPressed: () {},
-                                ),
+                               
                               ));
                         },
                       );
@@ -70,7 +68,9 @@ Widget build(BuildContext context) {
               
             ),
         SizedBox(height: 60,),
-           ElevatedButton(onPressed: (){}, 
+           ElevatedButton(onPressed: (){
+            _clearCurrentOrder();
+           }, 
            child: Text('Check Out', style: TextStyle(fontSize:25),),
              style: ElevatedButton.styleFrom(
     minimumSize: Size(200, 50),
@@ -83,6 +83,14 @@ Widget build(BuildContext context) {
         ));
   }
 
+void _clearCurrentOrder() {
+    // Clear current order data
+    _orders.get().then((snapshot) {
+      for (DocumentSnapshot ds in snapshot.docs) {
+        ds.reference.delete();
+      }
+    });
 
-
+  }
 }
+
