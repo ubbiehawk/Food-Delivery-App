@@ -30,6 +30,10 @@ class _menuState extends State<menu> {
       .collection(restaurant)
       .doc('appetizers')
       .collection('items');
+  late final CollectionReference _menuMain = FirebaseFirestore.instance
+      .collection(restaurant)
+      .doc('main')
+      .collection('items');
 
   late final CollectionReference _menuEntrees = FirebaseFirestore.instance
       .collection(restaurant)
@@ -46,6 +50,12 @@ class _menuState extends State<menu> {
     return Scaffold(
         appBar: AppBar(
           title: Text('$title menu'),
+          actions: <Widget>[
+            IconButton(onPressed: (){
+
+            }, 
+            icon: Icon(Icons.shopping_cart_outlined))
+          ],
         ),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -92,10 +102,10 @@ class _menuState extends State<menu> {
               thickness: 5,
               color: Colors.black,
             ),
-            const Text('Entrees', style: TextStyle(fontSize: 30)),
+            const Text('Main Course', style: TextStyle(fontSize: 30)),
             Expanded(
               child: StreamBuilder(
-                  stream: _menuEntrees.snapshots(),
+                  stream: _menuMain.snapshots(),
                   builder:
                       (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
                     if (streamSnapshot.hasData) {
@@ -124,7 +134,44 @@ class _menuState extends State<menu> {
                       child: CircularProgressIndicator(),
                     );
                   }),
-            )
+            ),
+             const Divider(
+              height: 30,
+              thickness: 5,
+              color: Colors.black,
+            ),
+            const Text('Entrees', style: TextStyle(fontSize: 30)),
+            Expanded(
+              child: StreamBuilder(
+                  stream: _menuEntrees.snapshots(),
+                  builder:
+                      (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
+                    if (streamSnapshot.hasData) {
+                      return ListView.builder(
+                        itemCount: streamSnapshot.data!.docs.length,
+                        itemBuilder: (context, index) {
+                          final DocumentSnapshot documentSnapshot =
+                              streamSnapshot.data!.docs[index];
+                          return Card(
+                              margin: const EdgeInsets.all(10),
+                              child: ListTile(
+                                title: Text(
+                                    documentSnapshot['name'] +
+                                        '  --  \$${documentSnapshot['price']}',
+                                    style: const TextStyle(fontSize: 14)),
+                                trailing: IconButton(
+                                  icon: const Icon(Icons.add),
+                                  onPressed: () {},
+                                ),
+                              ));
+                        },
+                      );
+                    }
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }),
+            ),
           ],
         ));
   }
