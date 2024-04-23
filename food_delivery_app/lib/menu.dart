@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'firebase_options.dart';
+import 'package:food_delivery_app/checkout.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -45,6 +46,8 @@ class _menuState extends State<menu> {
       .doc('sides')
       .collection('items');
 
+final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
   List<String> order = [];
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,7 +55,10 @@ class _menuState extends State<menu> {
           title: Text('$title menu'),
           actions: <Widget>[
             IconButton(onPressed: (){
-
+ Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => CartScreen()));
             }, 
             icon: Icon(Icons.shopping_cart_outlined))
           ],
@@ -123,7 +129,14 @@ class _menuState extends State<menu> {
                                   style: const TextStyle(fontSize: 14)),
                               trailing: IconButton(
                                 icon: const Icon(Icons.add),
-                                onPressed: () {},
+                                //Adds an Item to Order Cart ###UNFINISHED
+                                onPressed: () {
+                              _firestore.collection('order')..add({
+                                'name': documentSnapshot['name'],
+                                'price': documentSnapshot['price'],
+                              });
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Item Added To Cart')));
+                                },
                               ),
                             ),
                           );
