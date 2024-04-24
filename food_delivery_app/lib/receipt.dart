@@ -42,6 +42,10 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
         if (_timerDuration > 0) {
           _timerDuration--;
         } else {
+          _clearCurrentOrder();
+          ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text('Order Successfully Arrived')));
           _timer.cancel();
         }
       });
