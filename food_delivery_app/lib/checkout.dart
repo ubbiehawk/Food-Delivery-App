@@ -1,38 +1,37 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/widgets.dart';
 import 'package:food_delivery_app/receipt.dart';
 
-late final CollectionReference _orders =
+final CollectionReference _orders =
     FirebaseFirestore.instance.collection('order');
 
-class cart extends StatefulWidget {
+class Cart extends StatefulWidget {
   @override
   CartScreen createState() => CartScreen();
 }
 
-class CartScreen extends State<cart> {
-  double total = 100;
+class CartScreen extends State<Cart> {
+  double total = 0;
 
   Future<void> calculateTotal() async {
-    total = 0;
-
-    QuerySnapshot querySnapshot =
+    QuerySnapshot<Map<String, dynamic>> querySnapshot =
         await FirebaseFirestore.instance.collection('order').get();
 
     querySnapshot.docs.forEach((doc) {
-      total += doc.get('price');
+      total += (doc['price'] ?? "0") ?? 0;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    calculateTotal().then((_) {
+      setState(() {});
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    void initState() {
-      super.initState();
-      calculateTotal();
-    }
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.deepPurple,

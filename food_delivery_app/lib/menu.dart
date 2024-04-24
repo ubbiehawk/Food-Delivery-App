@@ -11,21 +11,21 @@ void main() async {
   );
 }
 
-class menu extends StatefulWidget {
+class Menu extends StatefulWidget {
   final String restaurant;
   final String title;
-  const menu({super.key, required this.restaurant, required this.title});
+  const Menu({super.key, required this.restaurant, required this.title});
 
   @override
-  State<menu> createState() => _menuState(restaurant, title);
+  State<Menu> createState() => _MenuState(restaurant, title);
 }
 
+//boilerplate for creating streambuilder for each collection (reduces repetitiveness)
 class MenuItemList extends StatelessWidget {
   final Stream<QuerySnapshot> menuStream;
-
   MenuItemList({required this.menuStream, super.key});
-
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
@@ -72,10 +72,10 @@ class MenuItemList extends StatelessWidget {
   }
 }
 
-class _menuState extends State<menu> {
+class _MenuState extends State<Menu> {
   String restaurant;
   String title;
-  _menuState(this.restaurant, this.title);
+  _MenuState(this.restaurant, this.title);
 
   late final CollectionReference _menuAppetizers = FirebaseFirestore.instance
       .collection(restaurant)
@@ -87,10 +87,12 @@ class _menuState extends State<menu> {
       .doc('entrees')
       .collection('items');
 
+/*
   late final CollectionReference _menusides = FirebaseFirestore.instance
       .collection(restaurant)
       .doc('sides')
       .collection('items');
+*/
 
   List<String> order = [];
   Widget build(BuildContext context) {
@@ -103,7 +105,7 @@ class _menuState extends State<menu> {
             IconButton(
                 onPressed: () {
                   Navigator.push(
-                      context, MaterialPageRoute(builder: (context) => cart()));
+                      context, MaterialPageRoute(builder: (context) => Cart()));
                 },
                 icon: const Icon(Icons.shopping_cart_outlined),
                 color: Colors.grey)

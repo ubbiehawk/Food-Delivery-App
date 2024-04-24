@@ -14,7 +14,6 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -51,12 +50,14 @@ class _Homepage extends State<MyHomePage> {
                 padding: const EdgeInsets.all(10),
                 child: Column(
                   children: [
+                    //Clickable cards
+                    //3 restaurants: Taco Mac, Hattie B's, and Hungry AF
                     InkWell(
                       onTap: () {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const menu(
+                                builder: (context) => const Menu(
                                     restaurant: 'tacomac', title: 'Taco Mac')));
                       },
                       child: const Card(
@@ -77,7 +78,7 @@ class _Homepage extends State<MyHomePage> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const menu(
+                                builder: (context) => const Menu(
                                     restaurant: 'hattiebs',
                                     title: 'Hattie B\'s')));
                       },
@@ -99,7 +100,7 @@ class _Homepage extends State<MyHomePage> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const menu(
+                                builder: (context) => const Menu(
                                     restaurant: 'hungryaf',
                                     title: 'Hungry AF')));
                       },

@@ -12,6 +12,7 @@ class ConfirmationScreen extends StatefulWidget {
 }
 
 class _ConfirmationScreenState extends State<ConfirmationScreen> {
+  //randomly picks driver name/car type to display
   int randomDriver = 0;
   final List<String> _drivernames = <String>['Marcus', 'Angela', 'Peter'];
   final List<String> _cardetails = <String>[
@@ -26,13 +27,13 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
   ];
 
   late Timer _timer;
-  late int _timerDuration = 120;
+  //random time from 15-30 minutes
+  late int _timerDuration = (Random().nextInt(15) + 15) * 60;
+  late int time = _timerDuration;
 
   @override
   void initState() {
     super.initState();
-    // Generate a random duration of either 1 or 4 minutes
-    final random = Random();
     randomDriver = Random().nextInt(3);
 
     // Start the timer
@@ -133,7 +134,7 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
           ),
           const SizedBox(height: 20),
           LinearProgressIndicator(
-            value: _timerDuration > 0 ? (1 - _timerDuration / 120) : 1,
+            value: 1 - _timerDuration / time,
             backgroundColor: Colors.grey[300],
             valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue),
           ),
