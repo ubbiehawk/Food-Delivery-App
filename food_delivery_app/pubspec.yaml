@@ -25,6 +25,4 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/tacomac/
-    - assets/hattiebs/
-    - assets/hungryaf/
+    - assets/

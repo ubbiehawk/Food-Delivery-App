@@ -1,5 +1,3 @@
-//holds restaurant menu contents
-
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -83,10 +81,6 @@ class _menuState extends State<menu> {
       .collection(restaurant)
       .doc('appetizers')
       .collection('items');
-  late final CollectionReference _menuMain = FirebaseFirestore.instance
-      .collection(restaurant)
-      .doc('main')
-      .collection('items');
 
   late final CollectionReference _menuEntrees = FirebaseFirestore.instance
       .collection(restaurant)
@@ -98,19 +92,18 @@ class _menuState extends State<menu> {
       .doc('sides')
       .collection('items');
 
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
   List<String> order = [];
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.deepPurple,
-          title: Text('$title menu'),
+          title:
+              Text('$title menu', style: const TextStyle(color: Colors.white)),
           actions: <Widget>[
             IconButton(
                 onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => CartScreen()));
+                  Navigator.push(
+                      context, MaterialPageRoute(builder: (context) => cart()));
                 },
                 icon: const Icon(Icons.shopping_cart_outlined),
                 color: Colors.grey)
@@ -121,7 +114,7 @@ class _menuState extends State<menu> {
           children: [
             const Divider(
               height: 30,
-              thickness: 5,
+              thickness: 4,
               color: Colors.black,
             ),
             const Text('Appetizers', style: TextStyle(fontSize: 30)),
@@ -130,16 +123,7 @@ class _menuState extends State<menu> {
             ),
             const Divider(
               height: 30,
-              thickness: 5,
-              color: Colors.black,
-            ),
-            const Text('Main Course', style: TextStyle(fontSize: 30)),
-            Expanded(
-              child: MenuItemList(menuStream: _menuMain.snapshots()),
-            ),
-            const Divider(
-              height: 30,
-              thickness: 5,
+              thickness: 4,
               color: Colors.black,
             ),
             const Text('Entrees', style: TextStyle(fontSize: 30)),

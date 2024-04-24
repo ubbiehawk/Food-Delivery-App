@@ -1,30 +1,50 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/widgets.dart';
-import 'firebase_options.dart';
-import 'package:food_delivery_app/main.dart';
 import 'package:food_delivery_app/receipt.dart';
 
-late final CollectionReference _orders = FirebaseFirestore.instance.collection('order');
+late final CollectionReference _orders =
+    FirebaseFirestore.instance.collection('order');
 
-class CartScreen extends StatelessWidget {
+class cart extends StatefulWidget {
+  @override
+  CartScreen createState() => CartScreen();
+}
+
+class CartScreen extends State<cart> {
+  double total = 100;
+
+  Future<void> calculateTotal() async {
+    total = 0;
+
+    QuerySnapshot querySnapshot =
+        await FirebaseFirestore.instance.collection('order').get();
+
+    querySnapshot.docs.forEach((doc) {
+      total += doc.get('price');
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    double total = 0;
+    void initState() {
+      super.initState();
+      calculateTotal();
+    }
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Cart Checkout'),
+        backgroundColor: Colors.deepPurple,
+        title:
+            const Text('Cart Checkout', style: TextStyle(color: Colors.white)),
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Divider(
             height: 30,
-            thickness: 5,
+            thickness: 4,
             color: Colors.black,
           ),
           const Text('Current Order', style: TextStyle(fontSize: 30)),
@@ -42,19 +62,27 @@ class CartScreen extends StatelessWidget {
                   return ListView.builder(
                     itemCount: streamSnapshot.data!.docs.length,
                     itemBuilder: (context, index) {
-                      final DocumentSnapshot documentSnapshot = streamSnapshot.data!.docs[index];
+                      final DocumentSnapshot documentSnapshot =
+                          streamSnapshot.data!.docs[index];
+                      setState() {
+                        total = documentSnapshot['price'];
+                      }
+
                       return Card(
                         margin: const EdgeInsets.all(10),
                         child: ListTile(
                           title: Text(
-                            documentSnapshot['name'] + '  --  \$${documentSnapshot['price']}',
+                            documentSnapshot['name'] +
+                                '  --  \$${documentSnapshot['price']}',
                             style: const TextStyle(fontSize: 14),
                           ),
                           trailing: IconButton(
                             icon: const Icon(Icons.delete),
                             onPressed: () {
                               _orders.doc(documentSnapshot.id).delete();
-                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Item Deleted From Cart')));
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text('Item Deleted From Cart')));
                             },
                           ),
                         ),
@@ -70,7 +98,7 @@ class CartScreen extends StatelessWidget {
           ),
           const Divider(
             height: 30,
-            thickness: 5,
+            thickness: 4,
             color: Colors.black,
           ),
           Center(
@@ -80,28 +108,28 @@ class CartScreen extends StatelessWidget {
                 const Text('Total Price:', style: TextStyle(fontSize: 30)),
                 Text(
                   '\$$total',
-                  style: TextStyle(fontSize: 30),
+                  style: const TextStyle(fontSize: 30),
                 ),
               ],
             ),
           ),
-          SizedBox(height: 60),
+          const SizedBox(height: 60),
           ElevatedButton(
             onPressed: () {
-             // _clearCurrentOrder();
-             Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ConfirmationScreen()));
+              // _clearCurrentOrder();
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ConfirmationScreen()));
             },
-            child: Text('Check Out', style: TextStyle(fontSize: 25)),
             style: ElevatedButton.styleFrom(
-              minimumSize: Size(200, 50),
+              minimumSize: const Size(200, 50),
               foregroundColor: Colors.white,
-              backgroundColor: Color.fromARGB(255, 10, 10, 10),
+              backgroundColor: const Color.fromARGB(255, 10, 10, 10),
             ),
+            child: const Text('Check Out', style: TextStyle(fontSize: 25)),
           ),
-          SizedBox(height: 130),
+          const SizedBox(height: 130),
         ],
       ),
     );

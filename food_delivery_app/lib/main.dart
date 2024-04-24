@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'firebase_options.dart';
 import 'menu.dart';
 
@@ -45,7 +44,7 @@ class _Homepage extends State<MyHomePage> {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.deepPurple,
-          title: Text(widget.title),
+          title: Text(widget.title, style: TextStyle(color: Colors.white)),
         ),
         body: SingleChildScrollView(
             child: Padding(
@@ -63,8 +62,7 @@ class _Homepage extends State<MyHomePage> {
                       child: const Card(
                         child: ListTile(
                           leading: Image(
-                              image:
-                                  AssetImage('assets/tacomac/tacomaclogo.png')),
+                              image: AssetImage('assets/tacomaclogo.png')),
                           title: Text('Taco Mac',
                               style: TextStyle(
                                 fontSize: 20,
@@ -86,8 +84,7 @@ class _Homepage extends State<MyHomePage> {
                       child: const Card(
                         child: ListTile(
                           leading: Image(
-                              image: AssetImage(
-                                  'assets/hattiebs/hattiebslogo.png')),
+                              image: AssetImage('assets/hattiebslogo.png')),
                           title: Text('Hattie B\'s',
                               style: TextStyle(
                                 fontSize: 20,
@@ -109,8 +106,7 @@ class _Homepage extends State<MyHomePage> {
                       child: const Card(
                         child: ListTile(
                           leading: Image(
-                              image: AssetImage(
-                                  'assets/hungryaf/hungryaflogo.png')),
+                              image: AssetImage('assets/hungryaflogo.png')),
                           title: Text('Hungry AF',
                               style: TextStyle(
                                 fontSize: 20,
