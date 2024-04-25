@@ -14,20 +14,23 @@ class CartScreen extends State<Cart> {
   double total = 0;
 
   Future<void> calculateTotal() async {
+    total = 0;
     QuerySnapshot<Map<String, dynamic>> querySnapshot =
         await FirebaseFirestore.instance.collection('order').get();
 
     querySnapshot.docs.forEach((doc) {
       total += (doc['price'] ?? "0") ?? 0;
     });
+
+    setState(() {
+      total;
+    });
   }
 
   @override
   void initState() {
     super.initState();
-    calculateTotal().then((_) {
-      setState(() {});
-    });
+    calculateTotal();
   }
 
   @override
@@ -79,6 +82,7 @@ class CartScreen extends State<Cart> {
                             icon: const Icon(Icons.delete),
                             onPressed: () {
                               _orders.doc(documentSnapshot.id).delete();
+                              calculateTotal();
                               ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
                                       content: Text('Item Deleted From Cart')));

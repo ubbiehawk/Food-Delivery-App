@@ -87,13 +87,6 @@ class _MenuState extends State<Menu> {
       .doc('entrees')
       .collection('items');
 
-/*
-  late final CollectionReference _menusides = FirebaseFirestore.instance
-      .collection(restaurant)
-      .doc('sides')
-      .collection('items');
-*/
-
   List<String> order = [];
   Widget build(BuildContext context) {
     return Scaffold(
